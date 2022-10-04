@@ -1,13 +1,14 @@
-import jwt from 'jsonwebtoken';
-import asyncHandler from '../utils/asyncHandler.js';
-import ErrorResponse from '../utils/ErrorResponse.js';
+import jwt from "jsonwebtoken";
+import asyncHandler from "../utils/asyncHandler.js";
+import ErrorResponse from "../utils/ErrorResponse.js";
 
 const verifyToken = asyncHandler(async (req, res, next) => {
+  console.log(req.cookies);
   const {
-    headers: { authorization }
+    cookies: { authtoken },
   } = req;
-  if (!authorization) throw new ErrorResponse('Please login', 401);
-  const { _id } = jwt.verify(authorization, process.env.JWT_SECRET);
+  if (!authtoken) throw new ErrorResponse("Please login", 401);
+  const { _id } = jwt.verify(authtoken, process.env.JWT_SECRET);
   req.userId = _id;
   next();
 });
