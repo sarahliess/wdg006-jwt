@@ -27,6 +27,7 @@ export const registerUser = async (req, res, next) => {
     res.cookie("authtoken", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
     });
     res.json({ token });
   } catch (error) {
@@ -55,7 +56,7 @@ Check if user already exists => User.find(by email) []
     const verifyPassword = await bcrypt.compare(password, user.password);
     console.log(verifyPassword);
     if (!verifyPassword) res.status(400).send("Password is not correct");
-    //property in payload mit dem key "user" und dem Wert der user Id aus der Datenbank
+    //property in payload mit dem key "_id" und dem Wert der user Id aus der Datenbank
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
     console.log(token);
     res.set("authtoken", token);
